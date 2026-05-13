@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+
+    string t, p;
+    cin >> t >> p;
+
+    int n = t.size(), m = p.size();
+
+    cout << "Pattern Found At: ";
+
+    for(int i = 0; i <= n - m; i++) {
+
+        int j;
+
+        for(j = 0; j < m; j++) {
+            if(t[i + j] != p[j])
+                break;
+        }
+
+        if(j == m)
+            cout << i << " ";
+    }
+
+    return 0;
+}
+
+/*
+Sample Input:
+
+AABAACAADAABAABA
+AABA
+
+Sample Output:
+
+Pattern Found At: 0 9 12
+*/

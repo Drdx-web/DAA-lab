@@ -1,0 +1,87 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node {
+    char d;
+    int f;
+    Node *l, *r;
+
+    Node(char d, int f) {
+        this->d = d;
+        this->f = f;
+        l = r = NULL;
+    }
+};
+
+struct cmp {
+    bool operator()(Node* a, Node* b) {
+        return a->f > b->f;
+    }
+};
+
+void print(Node* r, string s) {
+
+    if(!r) return;
+
+    if(r->d != '$')
+        cout << r->d << " : " << s << endl;
+
+    print(r->l, s + "0");
+    print(r->r, s + "1");
+}
+
+int main() {
+
+    int n;
+    cin >> n;
+
+    vector<char> c(n);
+    vector<int> f(n);
+
+    for(int i = 0; i < n; i++)
+        cin >> c[i];
+
+    for(int i = 0; i < n; i++)
+        cin >> f[i];
+
+    priority_queue<Node*, vector<Node*>, cmp> pq;
+
+    for(int i = 0; i < n; i++)
+        pq.push(new Node(c[i], f[i]));
+
+    while(pq.size() > 1) {
+
+        Node *l = pq.top(); pq.pop();
+        Node *r = pq.top(); pq.pop();
+
+        Node *t = new Node('$', l->f + r->f);
+
+        t->l = l;
+        t->r = r;
+
+        pq.push(t);
+    }
+
+    cout << "Huffman Codes:\n";
+
+    print(pq.top(), "");
+
+    return 0;
+}
+
+/*
+Sample Input:
+
+6
+a b c d e f
+5 9 12 13 16 45
+
+Sample Output:
+
+f : 0
+c : 100
+d : 101
+a : 1100
+b : 1101
+e : 111
+*/

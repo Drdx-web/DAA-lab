@@ -1,0 +1,56 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int linearSearch(int a[], int n, int k) {
+    for(int i = 0; i < n; i++)
+        if(a[i] == k) return i;
+    return -1;
+}
+
+int binarySearch(int a[], int n, int k) {
+    int l = 0, h = n - 1;
+
+    while(l <= h) {
+        int m = (l + h) / 2;
+
+        if(a[m] == k) return m;
+        if(a[m] < k) l = m + 1;
+        else h = m - 1;
+    }
+    return -1;
+}
+
+int randomBinarySearch(int a[], int l, int h, int k) {
+    if(l > h) return -1;
+
+    int m = l + rand() % (h - l + 1);
+
+    if(a[m] == k) return m;
+    if(a[m] < k)
+        return randomBinarySearch(a, m + 1, h, k);
+    return randomBinarySearch(a, l, m - 1, k);
+}
+
+int main() {
+    srand(time(0));
+
+    int a[] = {2, 5, 8, 12, 16, 23, 38};
+    int n = sizeof(a) / sizeof(a[0]), key = 16;
+
+    cout << "Linear Search: " << linearSearch(a, n, key) << endl;
+    cout << "Binary Search: " << binarySearch(a, n, key) << endl;
+    cout << "Random Binary Search: "
+         << randomBinarySearch(a, 0, n - 1, key);
+
+    return 0;
+}
+
+/*
+Sample Output:
+
+Linear Search: 4
+Binary Search: 4
+Random Binary Search: 4
+*/
