@@ -1,39 +1,39 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int main() {
-
-    int n, V;
-    cin >> n;
-
-    vector<int> coin(n);
-
-    for(int i = 0; i < n; i++)
-        cin >> coin[i];
-
-    cin >> V;
-
-    vector<int> dp(V + 1, INT_MAX);
-
-    dp[0] = 0;
-
-    for(int i = 1; i <= V; i++) {
-
-        for(int c : coin) {
-
-            if(c <= i && dp[i - c] != INT_MAX)
-                dp[i] = min(dp[i], dp[i - c] + 1);
-        }
+int main(){
+    int n;
+    int amt;
+    int coin[100];
+    cout<<"Enter the number of coins\t";
+    cin>>n;
+    cout<<"Enter the coin's vlaue \t";
+    for(int i=0;i<n;i++){
+        cin>>coin[i];
     }
+    cout<<"Enter the amount to be achived\t";
+    cin>>amt;
+    int dp[100];
+    for(int i=0;i<=amt;i++){
+        dp[i]=INT_MAX;
+    }
+    dp[0]=0;
 
-    if(dp[V] == INT_MAX)
-        cout << "Not Possible";
-    else
-        cout << "Minimum Coins = " << dp[V];
-
+    for(int i=1;i<=amt;i++){
+        for (int j=0;j<n;j++){
+            if(coin[j]<=i&&dp[i-coin[j]]!=INT_MAX){
+                dp[i]=min(dp[i],1+dp[i-coin[j]]);
+            }
+        }
+    }  
+    if(dp[amt]==INT_MAX) {
+        cout<<"Amount can't be formed"<<endl;
+    }
+    else{
+        cout<<"Amount can be formed with coins "<<dp[amt]<<endl;
+    }
     return 0;
 }
-
 /*
 Sample Input:
 
