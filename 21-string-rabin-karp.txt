@@ -1,52 +1,79 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define d 256
+int main()
+{
+    string text;
+    string pattern;
 
-int main() {
+    cout << "Enter text: ";
+    cin >> text;
 
-    string t, p;
-    cin >> t >> p;
+    cout << "Enter pattern: ";
+    cin >> pattern;
 
+    int d = 256;
     int q = 101;
-    int n = t.size(), m = p.size();
-    int ph = 0, th = 0, h = 1;
 
-    for(int i = 0; i < m - 1; i++)
+    int n = text.length();
+    int m = pattern.length();
+
+    int p = 0;
+    int t = 0;
+
+    int h = 1;
+
+    for(int i=0; i<m-1; i++)
+    {
         h = (h * d) % q;
-
-    for(int i = 0; i < m; i++) {
-        ph = (d * ph + p[i]) % q;
-        th = (d * th + t[i]) % q;
     }
 
-    cout << "Pattern Found At: ";
+    for(int i=0; i<m; i++)
+    {
+        p = (d*p + pattern[i]) % q;
 
-    for(int i = 0; i <= n - m; i++) {
+        t = (d*t + text[i]) % q;
+    }
 
-        if(ph == th) {
+    for(int i=0; i<=n-m; i++)
+    {
+        if(p == t)
+        {
+            bool match = true;
 
-            int j;
+            for(int j=0; j<m; j++)
+            {
+                if(text[i+j] != pattern[j])
+                {
+                    match = false;
 
-            for(j = 0; j < m; j++)
-                if(t[i + j] != p[j]) break;
+                    break;
+                }
+            }
 
-            if(j == m)
-                cout << i << " ";
+            if(match)
+            {
+                cout << "Pattern found at index "
+                     << i << endl;
+            }
         }
 
-        if(i < n - m) {
+        if(i < n-m)
+        {
+            t = (
+            d * (t - text[i]*h)
+            + text[i+m]
+            ) % q;
 
-            th = (d * (th - t[i] * h) + t[i + m]) % q;
-
-            if(th < 0)
-                th += q;
+            if(t < 0)
+            {
+                t = t + q;
+            }
         }
     }
 
     return 0;
 }
-
 /*
 Sample Input:
 
