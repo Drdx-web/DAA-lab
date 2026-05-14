@@ -1,119 +1,48 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define INF 1e9
+int graph[10][10];
+int visited[10];
+int n;
+int ans=INT_MAX;
 
-int n, cost[10][10], ans = INF;
-bool vis[10];
-vector<int> path, best;
-
-int firstMin(int i) {
-
-    int m = INF;
-
-    for(int j = 0; j < n; j++)
-        if(i != j) m = min(m, cost[i][j]);
-
-    return m;
-}
-
-int secondMin(int i) {
-
-    int a = INF, b = INF;
-
-    for(int j = 0; j < n; j++) {
-
-        if(i == j) continue;
-
-        if(cost[i][j] <= a)
-            b = a, a = cost[i][j];
-
-        else if(cost[i][j] < b)
-            b = cost[i][j];
-    }
-
-    return b;
-}
-
-void tsp(int bound, int wt, int lvl) {
-
-    if(lvl == n) {
-
-        int cur = wt + cost[path[lvl - 1]][0];
-
-        if(cost[path[lvl - 1]][0] && cur < ans) {
-            ans = cur;
-            best = path;
-        }
-
+void tsp(int currCity,int count ,int currCost){
+    if(count==n&&graph[currCity][0]){
+        ans=min(ans,currCost+graph[currCity][0]);
         return;
     }
-
-    for(int i = 0; i < n; i++) {
-
-        if(cost[path[lvl - 1]][i] && !vis[i]) {
-
-            int temp = bound;
-
-            wt += cost[path[lvl - 1]][i];
-
-            bound -= (lvl == 1) ?
-                (firstMin(path[lvl - 1]) + firstMin(i)) / 2 :
-                (secondMin(path[lvl - 1]) + firstMin(i)) / 2;
-
-            if(bound + wt < ans) {
-
-                path[lvl] = i;
-                vis[i] = true;
-
-                tsp(bound, wt, lvl + 1);
-            }
-
-            wt -= cost[path[lvl - 1]][i];
-            bound = temp;
-
-            fill(vis, vis + n, false);
-
-            for(int j = 0; j < lvl; j++)
-                vis[path[j]] = true;
+    for(int i=0;i<n;i++){
+        if(visited[i]==0&&currCost+graph[currCity][i]<ans){
+            visited[i]=1;
+            tsp(i,count+1,currCost+graph[currCity][i]);
+            visited[i]=0;
         }
     }
 }
 
-int main() {
 
-    cin >> n;
 
-    for(int i = 0; i < n; i++)
-        for(int j = 0; j < n; j++)
-            cin >> cost[i][j];
 
-    path.resize(n);
+int main(){
+    cout<<"Enter the number of cities\t";
+    cin>>n;
+    cout<<"Enter the cost matrix";
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            cin>>graph[i][j];
+        }
+    }
+    for(int i=0;i<n;i++){
+        visited[i]=0;
 
-    int bound = 0;
-
-    for(int i = 0; i < n; i++)
-        bound += firstMin(i) + secondMin(i);
-
-    bound = (bound + 1) / 2;
-
-    vis[0] = true;
-    path[0] = 0;
-
-    tsp(bound, 0, 1);
-
-    cout << "Minimum Cost = " << ans << endl;
-
-    cout << "Path: ";
-
-    for(int i : best)
-        cout << i << " ";
-
-    cout << 0;
+    }
+    visited[0]=1;
+    tsp(0,1,0);
+    cout<<"total cost = "<<ans;
 
     return 0;
+    
 }
-
 /*
 Sample Input:
 
