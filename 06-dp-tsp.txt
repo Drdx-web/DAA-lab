@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define INF 1e9
+
+int tsp(int mask, int pos,
+        vector<vector<int>> &d,
+        vector<vector<int>> &dp, int n) {
+
+    if(mask == (1 << n) - 1)
+        return d[pos][0];
+
+    if(dp[mask][pos] != -1)
+        return dp[mask][pos];
+
+    int ans = INF;
+
+    for(int city = 0; city < n; city++) {
+
+        if(!(mask & (1 << city))) {
+
+            ans = min(ans,
+                  d[pos][city] +
+                  tsp(mask | (1 << city),
+                  city, d, dp, n));
+        }
+    }
+
+    return dp[mask][pos] = ans;
+}
+
+int main() {
+
+    int n;
+    cin >> n;
+
+    vector<vector<int>> d(n, vector<int>(n));
+
+    for(int i = 0; i < n; i++)
+        for(int j = 0; j < n; j++)
+            cin >> d[i][j];
+
+    vector<vector<int>> dp(1 << n,
+                           vector<int>(n, -1));
+
+    cout << "Minimum Cost = "
+         << tsp(1, 0, d, dp, n);
+
+    return 0;
+}
+
+/*
+Sample Input:
+
+4
+0 10 15 20
+10 0 35 25
+15 35 0 30
+20 25 30 0
+
+Sample Output:
+
+Minimum Cost = 80
+*/

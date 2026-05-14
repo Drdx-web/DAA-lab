@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+#define INF 1000000000
+
+int main() {
+    int V;
+    cin >> V;
+
+    vector<vector<int>> d(V, vector<int>(V));
+
+    for(int i = 0; i < V; i++)
+        for(int j = 0; j < V; j++)
+            cin >> d[i][j];
+
+    // Floyd Warshall
+    for(int k = 0; k < V; k++)
+        for(int i = 0; i < V; i++)
+            for(int j = 0; j < V; j++)
+                if(d[i][k] < INF && d[k][j] < INF)
+                    d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
+
+    cout << "Shortest Distance Matrix:\n";
+
+    for(int i = 0; i < V; i++) {
+        for(int j = 0; j < V; j++)
+            cout << (d[i][j] == INF ? "INF" : to_string(d[i][j])) << " ";
+        cout << endl;
+    }
+
+    return 0;
+}
+
+/*
+Sample Input:
+
+4
+0 5 1000000000 10
+1000000000 0 3 1000000000
+1000000000 1000000000 0 1
+1000000000 1000000000 1000000000 0
+
+Sample Output:
+
+0 5 8 9
+INF 0 3 4
+INF INF 0 1
+INF INF INF 0
+*/
