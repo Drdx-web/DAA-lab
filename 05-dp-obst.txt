@@ -1,52 +1,98 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int main() {
+int sum(int freq[], int i, int j)
+{
+    int s = 0;
 
-    int n;
-    cin >> n;
-
-    vector<float> p(n + 1), q(n + 1);
-
-    for(int i = 1; i <= n; i++)
-        cin >> p[i];
-
-    for(int i = 0; i <= n; i++)
-        cin >> q[i];
-
-    vector<vector<float>> e(n + 2, vector<float>(n + 1, 0));
-    vector<vector<float>> w(n + 2, vector<float>(n + 1, 0));
-
-    for(int i = 1; i <= n + 1; i++) {
-        e[i][i - 1] = q[i - 1];
-        w[i][i - 1] = q[i - 1];
+    for(int k=i; k<=j; k++)
+    {
+        s = s + freq[k];
     }
 
-    for(int l = 1; l <= n; l++) {
+    return s;
+}
 
-        for(int i = 1; i <= n - l + 1; i++) {
+int main()
+{
+    int n;
 
-            int j = i + l - 1;
+    int key[100];
 
-            e[i][j] = INT_MAX;
-            w[i][j] = w[i][j - 1] + p[j] + q[j];
+    int freq[100];
 
-            for(int r = i; r <= j; r++) {
+    cout << "Enter number of keys: ";
+    cin >> n;
 
-                float cost = e[i][r - 1] +
-                             e[r + 1][j] +
-                             w[i][j];
+    cout << "Enter keys: ";
 
-                e[i][j] = min(e[i][j], cost);
+    for(int i=0; i<n; i++)
+    {
+        cin >> key[i];
+    }
+
+    cout << "Enter frequencies: ";
+
+    for(int i=0; i<n; i++)
+    {
+        cin >> freq[i];
+    }
+
+    int cost[100][100];
+
+    for(int i=0; i<n; i++)
+    {
+        cost[i][i] = freq[i];
+    }
+
+    for(int len=2; len<=n; len++)
+    {
+        for(int i=0; i<=n-len; i++)
+        {
+            int j = i + len - 1;
+
+            cost[i][j] = INT_MAX;
+
+            int fsum = sum(freq, i, j);
+
+            for(int r=i; r<=j; r++)
+            {
+                int left;
+
+                int right;
+
+                if(r > i)
+                {
+                    left = cost[i][r-1];
+                }
+                else
+                {
+                    left = 0;
+                }
+
+                if(r < j)
+                {
+                    right = cost[r+1][j];
+                }
+                else
+                {
+                    right = 0;
+                }
+
+                int total =
+                left + right + fsum;
+
+                cost[i][j] =
+                min(cost[i][j], total);
             }
         }
     }
 
-    cout << "Minimum Cost = " << e[1][n];
+    cout << "Optimal Cost = "
+         << cost[0][n-1];
 
     return 0;
 }
-
 /*
 Sample Input:
 
